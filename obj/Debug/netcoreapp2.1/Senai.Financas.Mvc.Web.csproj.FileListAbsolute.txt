@@ -25,3 +25,4 @@ C:\Users\44846245837\Desktop\Senai_Financas_Web_Mvc_Tarde\obj\Debug\netcoreapp2.
 C:\Users\44846245837\Desktop\Senai_Financas_Web_Mvc_Tarde\obj\Debug\netcoreapp2.1\Senai.Financas.Mvc.Web.pdb
 C:\Users\44846245837\Desktop\Senai_Financas_Web_Mvc_Tarde\obj\Debug\netcoreapp2.1\Senai.Financas.Mvc.Web.csproj.CopyComplete
 C:\Users\44846245837\Desktop\Senai_Financas_Web_Mvc_Tarde\obj\Debug\netcoreapp2.1\Razor\Views\Usuario\Editar.g.cshtml.cs
+C:\Users\44846245837\Desktop\Senai_Financas_Web_Mvc_Tarde\obj\Debug\netcoreapp2.1\Razor\Views\Shared\MasterPageUsuario.g.cshtml.cs

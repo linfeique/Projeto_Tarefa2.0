@@ -4,11 +4,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Senai.Financas.Mvc.Web.Models;
 using Senai.Financas.Mvc.Web.Repositorios;
+using Senai_Financas_Web_Mvc_Tarde.Interfaces;
+using Senai_Financas_Web_Mvc_Tarde.Repositorios;
 
 namespace Senai.Financas.Mvc.Web.Controllers
 {
     public class UsuarioController : Controller
     {
+        public IUsuario UsuarioRepositorio {get; set;}
+        public UsuarioController()
+        {
+            UsuarioRepositorio = new UsuarioRepositorioSerializacao();
+        }
+
         [HttpGet]
         public ActionResult Cadastro(){
             return View();
@@ -16,14 +24,17 @@ namespace Senai.Financas.Mvc.Web.Controllers
 
         [HttpPost]
         public ActionResult Cadastro(IFormCollection form){
-            UsuarioModel usuarioModel = new UsuarioModel();
 
-            usuarioModel.Nome = form["nome"];
-            usuarioModel.Email = form["email"];
-            usuarioModel.DataNascimento = DateTime.Parse(form["dataNascimento"]);
-            usuarioModel.Senha = form["senha"];
+            UsuarioModel usuarioModel = new UsuarioModel(
+                nome: form["nome"],
+                email: form["email"],
+                senha: form["senha"],
+                dataNascimento: DateTime.Parse(form["dataNascimento"])
+            );
 
-            UsuarioRepositorio usuarioRepositorio = new UsuarioRepositorio();
+            // UsuarioRepositorio usuarioRepositorio = new UsuarioRepositorio();
+
+            UsuarioRepositorioSerializacao usuarioRepositorio = new UsuarioRepositorioSerializacao();
             usuarioRepositorio.Cadastrar(usuarioModel);
 
             ViewBag.Mensagem = "Usuário Cadastrado";
@@ -37,18 +48,14 @@ namespace Senai.Financas.Mvc.Web.Controllers
         [HttpPost]
         public IActionResult Login(IFormCollection form)
         {
-            
-            //Pega os dados do POST
-            UsuarioModel usuario = new UsuarioModel
-            {
-                Email = form["email"],
-                Senha = form["senha"]
-            };
 
-            //Verificar se o usuário possuí acesso para realizazr login
-            UsuarioRepositorio usuarioRep = new UsuarioRepositorio();
-            
-            UsuarioModel usuarioModel = usuarioRep.BuscarPorEmailESenha(usuario.Email, usuario.Senha);
+            //Pega os dados do POST
+            UsuarioModel usuario = new UsuarioModel(
+                email: form["email"],
+                senha: form["senha"]
+            );
+
+            UsuarioModel usuarioModel = UsuarioRepositorio.BuscarPorEmailESenha(usuario.Email, usuario.Senha);
 
             if (usuarioModel != null)
             {
@@ -73,20 +80,20 @@ namespace Senai.Financas.Mvc.Web.Controllers
         [HttpGet]
         public IActionResult Listar()
         {
-            UsuarioRepositorio rep = new UsuarioRepositorio();
+            // UsuarioRepositorio rep = new UsuarioRepositorio();
+            UsuarioRepositorioSerializacao rep = new UsuarioRepositorioSerializacao();
 
             //Buscando os dados do rep. e aplicando no view bag
             //ViewBag.Usuarios = rep.Listar();
             ViewData["Usuarios"] = rep.Listar();
-            
+
             return View();
         }
 
         [HttpGet]
         public IActionResult Excluir(int id)
         {
-            UsuarioRepositorio rep = new UsuarioRepositorio();
-            rep.Excluir(id);
+            UsuarioRepositorio.Excluir(id);
             
             TempData["Mensagem"] = "Usuario excluido";
             
@@ -101,8 +108,7 @@ namespace Senai.Financas.Mvc.Web.Controllers
                 return RedirectToAction("Listar");
             }
 
-            UsuarioRepositorio usuarioRepositorio = new UsuarioRepositorio();
-            UsuarioModel usuario = usuarioRepositorio.BuscarPorId(id);
+            UsuarioModel usuario = UsuarioRepositorio.BuscarPorId(id);
 
             if(usuario != null){
                 ViewBag.Usuario = usuario;
@@ -117,15 +123,15 @@ namespace Senai.Financas.Mvc.Web.Controllers
         [HttpPost]
         public IActionResult Editar(IFormCollection form){
 
-            UsuarioModel usuario = new UsuarioModel();
-            usuario.ID = int.Parse(form["id"]);
-            usuario.Nome = form["nome"];
-            usuario.Email = form["email"];
-            usuario.Senha = form["senha"];
-            usuario.DataNascimento = DateTime.Parse(form["dataNascimento"]);
+            UsuarioModel usuario = new UsuarioModel(
+                id: int.Parse(form["id"]),
+                nome: form["nome"],
+                email: form["email"],
+                senha: form["senha"],
+                dataNascimento: DateTime.Parse(form["dataNascimento"])
+            );
 
-            UsuarioRepositorio usuarioRepositorio = new UsuarioRepositorio();
-            usuarioRepositorio.Editar(usuario);
+            UsuarioRepositorio.Editar(usuario);
 
             TempData["Mensagem"] = "Usuario editado";
 
