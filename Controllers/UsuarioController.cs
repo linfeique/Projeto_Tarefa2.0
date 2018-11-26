@@ -56,18 +56,17 @@ namespace Senai.Financas.Mvc.Web.Controllers
             );
 
             UsuarioModel usuarioModel = UsuarioRepositorio.BuscarPorEmailESenha(usuario.Email, usuario.Senha);
-
+            
             if (usuarioModel != null)
             {
                 HttpContext.Session.SetString("idUsuario", usuarioModel.Email.ToString());
-
-                ViewBag.Mensagem = "Login realizado com sucesso!";
 
                 return RedirectToAction("Cadastrar", "Transacao");
             }
             else
             {
-                ViewBag.Mensagem = "Acesso negado!";
+                ViewBag.Aviso = "display: block";
+                ViewBag.Mensagem = "O email ou a senha estão incorretos";
             }
 
             return View();

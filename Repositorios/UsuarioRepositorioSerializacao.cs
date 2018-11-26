@@ -31,7 +31,14 @@ namespace Senai_Financas_Web_Mvc_Tarde.Repositorios
 
         public UsuarioModel BuscarPorEmailESenha(string email, string senha)
         {
-            throw new System.NotImplementedException();
+            foreach (UsuarioModel usuario in UsuarioSalvos)
+            {
+                if(usuario.Email == email && usuario.Senha == senha){
+                    return usuario;
+                }
+            }
+
+            return null;
         }
 
         public UsuarioModel BuscarPorId(int id)
